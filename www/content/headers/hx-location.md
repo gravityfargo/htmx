@@ -2,7 +2,7 @@
 title = "HX-Location Response Header"
 +++
 
-This response header can be used to trigger a client side redirection without reloading the whole page. Instead of changing the page's location it will act like following a [`hx-boost` link](@/attributes/hx-boost.md), creating a new history entry, issuing an ajax request to the value of the header and pushing the path into history.
+This response header can be used to trigger a client side redirection without reloading the whole page. Instead of changing the page's location it will act like [`hx-boost`](@/attributes/hx-boost.md) on an anchor tag, creating a new history entry, issuing an ajax request to the value of the header and pushing the path into history.
 
 A sample response would be:
 
@@ -16,6 +16,13 @@ If you want to redirect to a specific target on the page rather than the default
 
 ```html
 HX-Location: {"path":"/test2", "target":"#testdiv"}
+```
+
+If you would like the functionality act the way hx-boost works on forms, you can pass the `push` option.
+The url will not be pushed, and no history entry will be created.
+
+```html
+HX-Location: {"path":"/test2", "target":"#testdiv", "push":false}
 ```
 
 Path is required and is url to load the response from. The rest of the data mirrors the [`ajax` api](@/api.md#ajax) context, which is:

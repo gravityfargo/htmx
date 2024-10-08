@@ -4632,18 +4632,25 @@ var htmx = (function() {
     }
 
     if (hasHeader(xhr, /HX-Location:/i)) {
-      saveCurrentPageToHistory()
       let redirectPath = xhr.getResponseHeader('HX-Location')
+
       /** @type {HtmxAjaxHelperContext&{path:string}} */
       var redirectSwapSpec
       if (redirectPath.indexOf('{') === 0) {
         redirectSwapSpec = parseJSON(redirectPath)
-        // what's the best way to throw an error if the user didn't include this
+        if (!redirectSwapSpec.path) {
+          throw new Error("HX-Location header is missing 'path' property.")
+        }
         redirectPath = redirectSwapSpec.path
         delete redirectSwapSpec.path
+        if (redirectSwapSpec.push !== 'false') {
+          saveCurrentPageToHistory()
+        }
       }
       ajaxHelper('get', redirectPath, redirectSwapSpec).then(function() {
-        pushUrlIntoHistory(redirectPath)
+        if (redirectSwapSpec.push !== 'false') {
+          pushUrlIntoHistory(redirectPath)
+        }
       })
       return
     }
